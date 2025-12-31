@@ -1,81 +1,125 @@
 # SmartROS Micro-OS
 
-## Description
-SmartROS Micro-OS est un micro-système intelligent basé sur ROS 2 pour systèmes embarqués.
-Il fournit des mécanismes de supervision, de détection de pannes et d’auto-réparation (auto-healing)
-pour améliorer la fiabilité des nœuds ROS dans des environnements embarqués.
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![ROS 2](https://img.shields.io/badge/ROS--2-Humble-orange.svg)](https://docs.ros.org/en/humble/)
+[![status](https://img.shields.io/badge/status-alpha-yellow.svg)](#etat-du-projet)
 
-## Objectifs du projet
-- Superviser l’état des nœuds ROS 2
-- Détecter les défaillances (nœud bloqué ou arrêté)
-- Relancer automatiquement les nœuds défaillants (auto-healing)
-- Fournir une architecture modulaire et extensible
+Résumé
+-------
+SmartROS Micro-OS est un micro-système intelligent de supervision et d'auto-réparation conçu pour améliorer la fiabilité des nœuds ROS 2 sur plateformes embarquées (Raspberry Pi, ESP32 via micro-ROS, etc.). Il surveille l'état des nœuds, détecte les défaillances et effectue des actions de récupération ciblées (redémarrage d'une tâche, basculement en mode dégradé, isolation d'un module).
 
-1️⃣ Contexte microcontrôleur / embarqué:
+Principales fonctionnalités
+---------------------------
+- Supervision et heartbeat des nœuds ROS 2
+- Détection automatique des défaillances (blocage, crash)
+- Auto-healing : redémarrage ciblé et modes dégradés
+- Priorisation dynamique des tâches (capteurs, communication, diagnostic)
+- Dashboard de supervision (visualisation des nœuds et actions)
+- Architecture modulaire et extensible pour microcontrôleurs et single-board computers
 
-Sur un PC ou serveur, le système d’exploitation et le hardware ont déjà des outils intégrés pour monitoring et auto-réparation.
+Pourquoi utiliser SmartROS Micro-OS ?
+------------------------------------
+Sur microcontrôleurs et SBCs (ESP32, Raspberry Pi), il manque souvent une couche de supervision applicative dédiée. SmartROS Micro-OS agit comme un "cerveau local" pour:
+- Protéger les tâches critiques (lecture capteurs, communication)
+- Faire du self-healing au niveau applicatif
+- Réduire les interventions manuelles et augmenter la disponibilité
 
-Sur microcontrôleur / ESP32 / Raspberry Pi, ce n’est pas le cas :
+Prérequis
+---------
+- Ubuntu 22.04 OR compatible (pour la phase PC)
+- ROS 2 Humble installé (voir https://docs.ros.org)
+- Python 3.10+ (phase d'orchestration initiale)
+- Pour la cible ESP32 : micro-ROS agent et toolchain (phase ultérieure)
 
-Pas de supervision automatique des tâches spécifiques à ton application.
+Installation (exemple rapide)
+-----------------------------
+1. Cloner le dépôt:
+   git clone https://github.com/selmag2/SmartROS-Micro-OS.git
+2. Se placer dans l'espace de travail ROS 2:
+   cd SmartROS-Micro-OS
+3. Installer dépendances (exemple):
+   pip install -r requirements.txt
+4. Soudre et builder (si packages ROS 2 présents):
+   colcon build
 
-Pas de self-healing pour des capteurs ou modules logiciels spécifiques.
+Quick start (exécution minimale)
+--------------------------------
+1. Sourcez votre workspace:
+   source install/setup.bash
+2. Démarrer le cœur ROS 2 (si nécessaire):
+   ros2 launch some_launch_file.launch.py
+3. Lancer le node Heartbeat (exemple):
+   ros2 run smartros_microos heartbeat_node
+4. Vérifier le heartbeat:
+   ros2 topic echo /smartros/heartbeat
 
-Les OS embarqués classiques (FreeRTOS, Arduino) ne fournissent pas de couche intelligente.
+Architecture (aperçu)
+---------------------
+- HeartbeatNode : émet un signal périodique pour chaque nœud supervisé
+- MonitorNode : consomme les heartbeats, détecte anomalies et escalade
+- ManagerNode : applique les actions d'auto-healing (restart, isoler, degarde)
+- Dashboard/UI : visualisation et historique des actions
+(Schéma: ajouter un diagramme dans docs/architecture.png ou README)
 
-💡 Donc la valeur ajoutée ici est : le micro-OS agit comme un “cerveau local” spécialisé pour ton système embarqué, pas pour l’ordinateur.
+Interfaces principales
+----------------------
+- Topics:
+  - /smartros/heartbeat (publication régulière des états)
+  - /smartros/events (événements de monitoring et actions)
+- Services:
+  - /smartros/restart_node (redémarrer un nœud supervisé)
+  - /smartros/set_mode (basculer en mode dégradé/normal)
+- Paramètres (exemples):
+  - heartbeat_interval (s)
+  - failure_threshold (nombre de heartbeats manquants avant alerte)
 
-2️⃣ Multi-tâches intelligentes:
-SmartROS Micro-OS priorise les tâches critiques :
+État du projet
+--------------
+- 🟡 Phase 1 : Mise en place de l’environnement ROS 2 (fait)
+- ⬜ Phase 2 : Heartbeat node
+- ⬜ Phase 3 : System monitor
+- ⬜ Phase 4 : Auto-healing
+- ⬜ Phase 5 : Intégration ESP32 / micro-ROS
 
-Lecture de capteurs
+Roadmap (extraits)
+------------------
+- Démo fonctionnelle Raspberry Pi (v0.1)
+- Intégration micro-ROS pour ESP32
+- Dashboard web temps réel + historique
+- Tests automatisés et CI
 
-Communication ROS / MQTT
+Contribuer
+----------
+Les contributions sont bienvenues ! Pour contribuer :
+1. Ouvrir une issue pour discuter de la fonctionnalité ou du bug.
+2. Créer une branche dédiée "feature/..." ou "fix/...".
+3. Soumettre une Pull Request bien documentée.
 
-Diagnostic
+Ajouts recommandés (à ajouter au repo)
+- LICENSE (par exemple MIT)
+- CONTRIBUTING.md
+- CODE_OF_CONDUCT.md
+- docs/architecture.png (diagramme)
+- examples/ (démonstrations et scripts)
+- requirements.txt et package.xml / setup.py si packages ROS 2
 
-Il peut adapter dynamiquement la fréquence ou arrêter une tâche non critique si le système est chargé.
+Contact
+-------
+Auteur: selmag2
+Repo: https://github.com/selmag2/SmartROS-Micro-OS
 
-3️⃣ Self-healing spécifique:
+FAQ / Dépannage
+---------------
+- Le node ne redémarre pas ? Vérifier les permissions et le gestionnaire de processus (systemd / supervisor).
+- Heartbeat non reçu ? Vérifier la fréquence et la latence réseau.
 
-Si un capteur ou un nœud ROS tombe, ton micro-OS peut :
+Licence
+-------
+Ce dépôt n'inclut pas encore de fichier LICENSE. Il est recommandé d'ajouter une licence (p.ex. MIT) pour clarifier l'utilisation.
 
-Redémarrer uniquement la tâche défaillante
-
-Basculer en mode dégradé
-
-Isoler un module en erreur
-
-Le PC classique ne fait pas ça pour ton application spécifique automatiquement.
-
-4️⃣ Visualisation et supervision intégrée:
-
-on peut montrer  un dashboard ROS où chaque nœud est visible, avec les réactions automatiques du micro-OS.
-
-5️⃣ Extensible et portable:
-
-Le micro-OS peut être porté vers micro-ROS sur ESP32/STM32, où les PC ne peuvent pas gérer ce hardware directement.
-
-L’idée clé : intelligence embarquée à proximité du hardware.
-
-## Plateformes ciblées
-- Raspberry Pi
-- ESP32 (via micro-ROS, étape ultérieure)
-
-## Technologies
-- ROS 2 Humble
-- Python (première phase)
-- C++ (phase avancée)
-- Ubuntu 22.04
-
-## Architecture générale
-SmartROS Micro-OS fonctionne comme une couche de supervision au-dessus de ROS 2
-et ne remplace pas ROS, mais l’enrichit avec des mécanismes de contrôle système.
-
-## État du projet
-🟡 Phase 1 : Mise en place de l’environnement ROS 2  
-⬜ Phase 2 : Heartbeat node  
-⬜ Phase 3 : System monitor  
-⬜ Phase 4 : Auto-healing  
-⬜ Phase 5 : Intégration ESP32
-# SmartROS-Micro-OS
+Remarques finales
+-----------------
+Ce README est une base plus complète, orientée "conso" : il explique rapidement comment démarrer, quelles interfaces utiliser et quoi ajouter pour rendre le projet professionnel. Dites-moi si vous voulez :
+- La version en anglais
+- Un README bilingue (FR/EN)
+- Que je crée aussi CONTRIBUTING.md et un template d'issue/PR
