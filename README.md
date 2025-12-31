@@ -11,7 +11,7 @@ pour améliorer la fiabilité des nœuds ROS dans des environnements embarqués.
 - Relancer automatiquement les nœuds défaillants (auto-healing)
 - Fournir une architecture modulaire et extensible
 
-1️⃣ Contexte microcontrôleur / embarqué
+1️⃣ Contexte microcontrôleur / embarqué:
 
 Sur un PC ou serveur, le système d’exploitation et le hardware ont déjà des outils intégrés pour monitoring et auto-réparation.
 
@@ -25,9 +25,8 @@ Les OS embarqués classiques (FreeRTOS, Arduino) ne fournissent pas de couche in
 
 💡 Donc la valeur ajoutée ici est : le micro-OS agit comme un “cerveau local” spécialisé pour ton système embarqué, pas pour l’ordinateur.
 
-2️⃣ Multi-tâches intelligentes
-
-Ton SmartROS Micro-OS priorise les tâches critiques :
+2️⃣ Multi-tâches intelligentes:
+SmartROS Micro-OS priorise les tâches critiques :
 
 Lecture de capteurs
 
@@ -37,7 +36,7 @@ Diagnostic
 
 Il peut adapter dynamiquement la fréquence ou arrêter une tâche non critique si le système est chargé.
 
-3️⃣ Self-healing spécifique
+3️⃣ Self-healing spécifique:
 
 Si un capteur ou un nœud ROS tombe, ton micro-OS peut :
 
@@ -49,15 +48,13 @@ Isoler un module en erreur
 
 Le PC classique ne fait pas ça pour ton application spécifique automatiquement.
 
-4️⃣ Visualisation et supervision intégrée
+4️⃣ Visualisation et supervision intégrée:
 
-Tu peux montrer à ton jury un dashboard ROS où chaque nœud est visible, avec les réactions automatiques du micro-OS.
+on peut montrer  un dashboard ROS où chaque nœud est visible, avec les réactions automatiques du micro-OS.
 
-C’est concret et pédagogique : tu démontres que le système se gère tout seul.
+5️⃣ Extensible et portable:
 
-5️⃣ Extensible et portable
-
-Ton micro-OS peut être porté vers micro-ROS sur ESP32/STM32, où les PC ne peuvent pas gérer ce hardware directement.
+Le micro-OS peut être porté vers micro-ROS sur ESP32/STM32, où les PC ne peuvent pas gérer ce hardware directement.
 
 L’idée clé : intelligence embarquée à proximité du hardware.
 
