@@ -95,8 +95,8 @@ Les contributions sont bienvenues ! Pour contribuer :
 2. Créer une branche dédiée "feature/..." ou "fix/...".
 3. Soumettre une Pull Request bien documentée.
 
-Ajouts recommandés (à ajouter au repo)
-- LICENSE (par exemple MIT)
+Ajouts recommandés 
+- LICENSE 
 - CONTRIBUTING.md
 - CODE_OF_CONDUCT.md
 - docs/architecture.png (diagramme)
@@ -117,9 +117,3 @@ Licence
 -------
 Ce dépôt n'inclut pas encore de fichier LICENSE. Il est recommandé d'ajouter une licence (p.ex. MIT) pour clarifier l'utilisation.
 
-Remarques finales
------------------
-Ce README est une base plus complète, orientée "conso" : il explique rapidement comment démarrer, quelles interfaces utiliser et quoi ajouter pour rendre le projet professionnel. Dites-moi si vous voulez :
-- La version en anglais
-- Un README bilingue (FR/EN)
-- Que je crée aussi CONTRIBUTING.md et un template d'issue/PR
