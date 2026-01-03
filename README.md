@@ -44,14 +44,9 @@ Installation (exemple rapide)
 
 Quick start (exécution minimale)
 --------------------------------
-1. Sourcez votre workspace:
-   source install/setup.bash
-2. Démarrer le cœur ROS 2 (si nécessaire):
-   ros2 launch some_launch_file.launch.py
-3. Lancer le node Heartbeat (exemple):
-   ros2 run smartros_microos heartbeat_node
-4. Vérifier le heartbeat:
-   ros2 topic echo /smartros/heartbeat
+cd ~/ros2_ws
+colcon build --symlink-install
+source install/setup.bash
 
 Architecture (aperçu)
 ---------------------
