@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartROS Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { margin-bottom: 20px; }
+        canvas { max-width: 600px; margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+
+<h2>📊 SmartROS System Dashboard</h2>
+
+<canvas id="cpuChart"></canvas>
+<canvas id="tempChart"></canvas>
+
+<script>
+const cpuCtx = document.getElementById('cpuChart').getContext('2d');
+const tempCtx = document.getElementById('tempChart').getContext('2d');
+
+const cpuChart = new Chart(cpuCtx, {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'CPU %', data: [], borderColor: 'blue', fill: false }] },
+    options: { responsive: true, animation: false }
+});
+
+const tempChart = new Chart(tempCtx, {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'Temp °C', data: [], borderColor: 'red', fill: false }] },
+    options: { responsive: true, animation: false }
+});
+
+const maxPoints = 20;  // Limite le nombre de points affichés
+
+async function updateData() {
+    try {
+        const res = await fetch('/data');
+        const raw = await res.json();
+
+        // Parser le JSON encapsulé dans data
+        const data = JSON.parse(raw.data);
+
+        const time = new Date().toLocaleTimeString();
+
+        // CPU
+        cpuChart.data.labels.push(time);
+        cpuChart.data.datasets[0].data.push(data.cpu_usage);
+        if (cpuChart.data.labels.length > maxPoints) {
+            cpuChart.data.labels.shift();
+            cpuChart.data.datasets[0].data.shift();
+        }
+
+        // Température
+        tempChart.data.labels.push(time);
+        tempChart.data.datasets[0].data.push(data.cpu_temperature);
+        if (tempChart.data.labels.length > maxPoints) {
+            tempChart.data.labels.shift();
+            tempChart.data.datasets[0].data.shift();
+        }
+
+        cpuChart.update();
+        tempChart.update();
+
+    } catch (err) {
+        console.error("Erreur lors de la récupération des données:", err);
+    }
+}
+
+// Actualiser toutes les 2 secondes
+setInterval(updateData, 2000);
+updateData();  // lancement immédiat
+</script>
+
+</body>
+</html>

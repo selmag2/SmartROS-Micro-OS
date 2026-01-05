@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartROS Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h2>📊 SmartROS System Dashboard</h2>
+
+<canvas id="cpuChart"></canvas>
+<canvas id="tempChart"></canvas>
+
+<script>
+const cpuCtx = document.getElementById('cpuChart');
+const tempCtx = document.getElementById('tempChart');
+
+const cpuChart = new Chart(cpuCtx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{ label: 'CPU %', data: [] }]
+    }
+});
+
+const tempChart = new Chart(tempCtx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{ label: 'Temp °C', data: [] }]
+    }
+});
+
+async function updateData() {
+    const res = await fetch('/data');
+    const data = await res.json();
+
+    if (!data.cpu_usage) return;
+
+    const time = new Date().toLocaleTimeString();
+
+    cpuChart.data.labels.push(time);
+    cpuChart.data.datasets[0].data.push(data.cpu_usage);
+
+    tempChart.data.labels.push(time);
+    tempChart.data.datasets[0].data.push(data.cpu_temperature);
+
+    cpuChart.update();
+    tempChart.update();
+}
+
+setInterval(updateData, 2000);
+</script>
+
+</body>
+</html>
