@@ -2,3 +2,9 @@ cd ~/ros2_ws
 colcon build
 source install/setup.bash
 ros2 launch smartros_launch all_nodes.launch.py
+
+
+
+
+pour lancer dashboard en terminal : ros2_ws$ ros2 run smartros_core dashboard_node
+pour lancer le dashboard pyton: /ros2_ws/src/SmartROS-Micro-OS/smartros_web/smartros_web$ python3 web_dashboard.py
