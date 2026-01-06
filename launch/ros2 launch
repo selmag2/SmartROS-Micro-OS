@@ -1,4 +1,4 @@
 cd ~/ros2_ws
 colcon build
 source install/setup.bash
-ros2 launch smartros_launch smartros.launch.py
+ros2 launch smartros_launch all_nodes.launch.py
